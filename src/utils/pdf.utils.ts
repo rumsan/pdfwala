@@ -1,13 +1,14 @@
 import * as PdfMake from 'pdfmake';
 
-import { replacePlaceholders } from '../utils/replacePlaceholders';
-import { listFontsFromFolder } from '../utils';
+import { TemplateJson, listFontsFromFolder, replacePlaceholders } from '.';
 
 const fonts = listFontsFromFolder('.data/fonts');
 
 const printer = new PdfMake(fonts);
 
-export function createPdf(template: string, data: any): Promise<Buffer> {
+export function createPdf(template: TemplateJson, data: any): Promise<Buffer> {
+  data.assetPath = data.assetPath || template.path;
+
   const docDefinition = replacePlaceholders(template, data);
   const pdfDoc = printer.createPdfKitDocument(docDefinition);
   return new Promise((resolve, reject) => {

@@ -9,7 +9,7 @@ import { NestFastifyApplication } from '@nestjs/platform-fastify';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 import { loggerInstance } from './logger/winston.logger';
 
 async function bootstrap() {

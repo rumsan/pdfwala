@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { ProcessorService } from './processor.service';
+import { QueueProcessor } from './queue.processor';
 
 @Module({
   imports: [
@@ -22,14 +21,9 @@ import { ProcessorService } from './processor.service';
           },
         },
         defaults: { from: '"No Reply" <no-reply@rumsan.com>' },
-        template: {
-          dir: __dirname + '/../.data',
-          adapter: new HandlebarsAdapter(),
-          options: { strict: true },
-        },
       }),
     }),
   ],
-  providers: [ProcessorService],
+  providers: [QueueProcessor],
 })
-export class AppModule {}
+export class QueueModule {}

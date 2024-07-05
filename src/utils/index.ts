@@ -1,6 +1,35 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+export type TemplateJson = {
+  name: string;
+  path: string;
+  pdf: any;
+  email: any;
+};
+
+export function getTemplateJson(
+  templateName: string,
+  rootPath?: string,
+): TemplateJson {
+  const templateRootPath =
+    rootPath ||
+    path.join(
+      process.cwd(),
+      '.data', // Change this to the correct path
+      'templates',
+    );
+  const templatePath = path.join(templateRootPath, templateName);
+  const templateFile = path.join(templatePath, 'template.json');
+
+  const jsonData: TemplateJson = JSON.parse(
+    fs.readFileSync(templateFile, 'utf8'),
+  );
+  jsonData.name = templateName;
+  jsonData.path = templatePath;
+  return jsonData;
+}
+
 export function listFilesInFolderByExtensions(
   targetFolder: string,
   extensions: string[],
@@ -128,4 +157,25 @@ export function saveFontsToJsonFile(jsonFilePath: string, fonts: object): void {
     JSON.stringify(jsonData, null, 2),
     'utf-8',
   );
+}
+
+export function replacePlaceholders(templateJson: any, data: any): any {
+  // Replace placeholders in the template JSON
+  const replacedJson = JSON.parse(
+    JSON.stringify(templateJson.pdf).replace(/{{(.*?)}}/g, (match, p1) => {
+      const keys = p1.split('.');
+      let value = data;
+      for (const key of keys) {
+        if (value.hasOwnProperty(key)) {
+          value = value[key];
+        } else {
+          value = '';
+          //throw new Error(`Placeholder '${p1}' not found in reference JSON.`);
+        }
+      }
+      return value;
+    }),
+  );
+
+  return replacedJson;
 }

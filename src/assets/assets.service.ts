@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { listFontsFromFolder } from 'src/utils';
+import { listFontsFromFolder } from '../utils';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
 
