@@ -1,0 +1,5 @@
+{
+  "watch": ["data/**", "scripts/**", "src/**"],
+  "ext": "js,ts,json,ttf,png,jpg,jpeg",
+  "ignore": "data/demo.pdf"
+}
