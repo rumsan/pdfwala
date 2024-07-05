@@ -4,21 +4,29 @@ import { getTemplateJson } from '../utils';
 import { createPdf } from '../utils/pdf.utils';
 import { createEmail } from '../utils/email.utils';
 import { Process, Processor } from '@nestjs/bull';
-import { PDF_EMAIL_QUEUE } from 'src/constants';
+import { QUEUE_DEFAULT, SEND_EMAIL } from '../constants';
+import { Job } from 'bull';
 
 @Injectable()
-@Processor(PDF_EMAIL_QUEUE)
+@Processor(QUEUE_DEFAULT)
 export class QueueProcessor {
   constructor(private readonly _mailerService: MailerService) {}
 
-  @Process(PDF_EMAIL_QUEUE)
+  @Process(SEND_EMAIL)
+  async processSendEmail(job: Job<{ templateName: string; data: any }>) {
+    const { templateName, data } = job.data;
+    return this.createPdfAndEmail(templateName, data);
+  }
+
   async createPdfAndEmail(templateName: string, data: any) {
     const template = getTemplateJson(templateName);
     const pdf = await createPdf(template, data);
 
-    if (data.sendEmail === true && template.email) {
+    if (template.email) {
       const emailPayload = await createEmail(template, data, pdf);
-      await this._mailerService.sendMail(emailPayload);
+      const res = await this._mailerService.sendMail(emailPayload);
+      console.log(res);
+      console.log('sending email:', templateName);
       return true;
     }
 

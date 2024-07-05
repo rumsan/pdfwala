@@ -27,8 +27,8 @@ export async function createEmail(
 ) {
   const payload: ISendMailOptions = {
     to: data.to,
-    from: data.from,
-    subject: data.subject,
+    from: `${data.fromName || template.email.fromName}<${template.email.from}>`,
+    subject: data.subject || template.email.subject,
   };
   payload.html = await renderTemplate(
     path.join(template.path, template.email.tplBody),

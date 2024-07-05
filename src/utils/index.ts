@@ -8,15 +8,18 @@ export type TemplateJson = {
   email: any;
 };
 
-export function getTemplateJson(templateName: string): TemplateJson {
-  const templatePath = path.join(
-    __dirname,
-    '..',
-    '..',
-    '.data', // Change this to the correct path
-    'templates',
-    templateName,
-  );
+export function getTemplateJson(
+  templateName: string,
+  rootPath?: string,
+): TemplateJson {
+  const templateRootPath =
+    rootPath ||
+    path.join(
+      process.cwd(),
+      '.data', // Change this to the correct path
+      'templates',
+    );
+  const templatePath = path.join(templateRootPath, templateName);
   const templateFile = path.join(templatePath, 'template.json');
 
   const jsonData: TemplateJson = JSON.parse(
