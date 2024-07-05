@@ -7,8 +7,7 @@ const data = {
 import * as fs from 'fs';
 import * as PdfMake from 'pdfmake';
 
-import { replacePlaceholders } from '../src/utils/replacePlaceholders';
-import { listFontsFromFolder } from '../src/utils';
+import { listFontsFromFolder, replacePlaceholders } from '../src/utils';
 
 const fonts = listFontsFromFolder('./.data/fonts');
 

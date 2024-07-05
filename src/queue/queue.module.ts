@@ -1,22 +1,14 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PdfMakeModule } from './pdfmake/pdf.module';
-import { PdfModule } from './pdf/pdf.module';
-import { TemplatesModule } from './templates/templates.module';
-import { AssetsModule } from './assets/assets.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { QueueProcessor } from './queue.processor';
+import { BullModule } from '@nestjs/bull';
+import { PDF_EMAIL_QUEUE } from 'src/constants';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    PdfMakeModule,
-    PdfModule,
-    TemplatesModule,
-    AssetsModule,
     BullModule.forRootAsync({
       useFactory: () => ({
         redis: {
@@ -48,8 +40,11 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         },
       }),
     }),
+
+    BullModule.registerQueue({
+      name: PDF_EMAIL_QUEUE,
+    }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [QueueProcessor],
 })
-export class AppModule {}
+export class QueueModule {}

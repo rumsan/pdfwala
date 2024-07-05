@@ -1,0 +1,1 @@
+export const PDF_EMAIL_QUEUE = 'PDF_EMAIL_QUEUE';
