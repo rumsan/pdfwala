@@ -51,7 +51,7 @@ export async function createEmail(
 
   if (pdfBuffer) {
     payload.attachments.push({
-      filename: `${template}.pdf`,
+      filename: `${template.name}.pdf`,
       content: pdfBuffer,
       contentType: 'application/pdf',
     });

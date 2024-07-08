@@ -25,8 +25,7 @@ export function getTemplateJson(
   const jsonData: TemplateJson = JSON.parse(
     fs.readFileSync(templateFile, 'utf8'),
   );
-  console.log(jsonData,'jsonData snake')
-
+  
   jsonData.name = templateName;
   jsonData.path = templatePath;
   return jsonData;
