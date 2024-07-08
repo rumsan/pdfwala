@@ -10,6 +10,7 @@ export async function renderTemplate(
 ): Promise<string> {
   try {
     const templateFile = await fs.promises.readFile(templatePath, 'utf-8');
+
     const template = Handlebars.compile(templateFile);
     const result = template(data);
 
@@ -26,8 +27,8 @@ export async function createEmail(
   pdfBuffer: Buffer,
 ) {
   const payload: ISendMailOptions = {
-    to: data.to,
-    from: `${data.fromName || template.email.fromName}<${template.email.from}>`,
+    to: data.email,
+    from: `${data.fromName || template.email.fromName}<${template.email.fromName}>`,
     subject: data.subject || template.email.subject,
   };
   payload.html = await renderTemplate(
