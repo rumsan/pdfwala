@@ -16,7 +16,6 @@ export class PdfService {
   constructor(@InjectQueue(QUEUE_DEFAULT) private readonly _queue: Queue) {}
 
   async create(dto: CreatePdfDto) {
-    console.log(dto, 'dto');
     let jobData: any;
 
     if (dto.templateName === 'donor-card') {
@@ -34,16 +33,14 @@ export class PdfService {
           abo: bloodGroupSplit[0],
           rh: bloodGroupSplit[1],
           eventDate: eventDate,
-          eventName:donorCardData.eventName,
+          eventName: donorCardData.eventName,
           organization: donorCardData.organization,
           email: donorCardData.email,
         },
       };
     } else if (dto.templateName === 'hlb-certificate') {
-     
-     
       const certificateData = dto.data as CertificateDto;
-      
+
       const formatDate = moment(certificateData.eventDate).format(
         'MMMM Do, YYYY',
       );

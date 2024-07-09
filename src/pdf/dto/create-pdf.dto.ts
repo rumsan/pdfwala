@@ -1,34 +1,3 @@
-// import { IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-// import { json } from 'stream/consumers';
-
-// export class CreatePdfDto {
-//     @IsNotEmpty()
-//     @IsString()
-//     templateName: string;
-// //     @IsNotEmpty()
-// //     @IsJSON()
-// //     data:{
-
-// //   fullName:string
-// //   email:string
-// //     }
-//     @IsNotEmpty()
-//     @IsString()
-//     fullName: string;
-//     @IsNotEmpty()
-//     @IsString()
-//     eventLocation: string;
-//     @IsNotEmpty()
-//     @IsString()
-//     email: string;
-//     @IsOptional()
-//     @IsString()
-//     organizerName?: string;
-//     @IsNotEmpty()
-//     @IsString()
-//     eventDate: string;
-// }
-
 import {
   IsNotEmpty,
   IsString,
@@ -39,10 +8,6 @@ import {
 import { Type } from 'class-transformer';
 
 export class DonorCardDto {
-  // @IsNotEmpty()
-  // @IsString()
-  // templateName: string;
-
   @IsNotEmpty()
   @IsString()
   fullName: string;
@@ -81,10 +46,6 @@ export class DonorCardDto {
 }
 
 export class CertificateDto {
-  // @IsNotEmpty()
-  // @IsString()
-  // templateName: string;
-
   @IsNotEmpty()
   @IsString()
   fullName: string;

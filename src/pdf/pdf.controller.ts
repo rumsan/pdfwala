@@ -9,13 +9,14 @@ import {
 } from '@nestjs/common';
 import { PdfService } from './pdf.service';
 import { UpdatePdfDto } from './dto/update-pdf.dto';
+import { CreatePdfDto } from './dto/create-pdf.dto';
 
 @Controller('pdf')
 export class PdfController {
   constructor(private readonly pdfService: PdfService) {}
 
   @Post()
-  create(@Body() createPdfDto: any) {
+  create(@Body() createPdfDto:CreatePdfDto ) {
   
     return this.pdfService.create(createPdfDto);
   }
