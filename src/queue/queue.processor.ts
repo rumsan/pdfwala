@@ -35,8 +35,12 @@ export class QueueProcessor {
   }
 
   @Process(SEND_EMAIL)
-  async processSendEmail(job: Job<{ templateName: string; data: TemplateData }>) {
-    this._logger.log(`sending thank you email to '${job.data.data.email}'`);
+  async processSendEmail(
+    job: Job<{ templateName: string; data: TemplateData }>,
+  ) {
+    this._logger.log(
+      `sending email for template '${job.data.templateName}' to '${job.data.data.email}'`,
+    );
     const { templateName, data } = job.data;
 
     return this.createPdfAndEmail(templateName, data);

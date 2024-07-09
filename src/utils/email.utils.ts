@@ -35,13 +35,20 @@ export async function createEmail(
     path.join(template.path, template.email.tplBody),
     data,
   );
+  const commonPathOfLogo = path.join(
+    process.cwd(),
+    '.data',
+    'templates',
+    'common',
+  );
 
   payload.attachments = [];
   if (template.email?.images)
     for (const img of template.email.images) {
+      
       payload.attachments.push({
         filename: img.file,
-        path: path.join(template.path, img.file),
+        path: path.join(commonPathOfLogo, img.file),
         cid: img.cid,
         headers: {
           'Content-Disposition': `inline; filename="${img.file}`,
