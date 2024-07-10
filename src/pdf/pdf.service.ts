@@ -9,7 +9,6 @@ import { CertificateDto } from './dto/create-pdf.dto';
 import { DonorCardDto } from './dto/create-pdf.dto';
 import * as moment from 'moment';
 import { calculateAge } from 'src/utils/helperFuntion';
-import { organizerConfig } from './organizer-config';
 
 @Injectable()
 export class PdfService {
@@ -41,8 +40,6 @@ export class PdfService {
     } else if (dto.templateName === 'hlb-certificate') {
       const certificateData = dto.data as CertificateDto;
 
-      const organizerUrl = organizerConfig[certificateData?.organizerName];
-
       const formatDate = moment(certificateData.eventDate).format(
         'MMMM Do, YYYY',
       );
@@ -55,7 +52,7 @@ export class PdfService {
           email: certificateData.email,
           organizerName: certificateData.organizerName,
           eventDate: formatDate,
-          organizerLogo: organizerUrl.url,
+          organization: certificateData.organization,
         },
       };
     } else if (dto.templateName === 'consent') {
@@ -87,12 +84,11 @@ export class PdfService {
         jobOptions,
       );
       const result = await job.finished();
-      
+
       if (typeof result === 'string') {
         return result; // Return base64 string
       }
-      return 'success'
-     
+      return 'success';
     } catch (error) {
       throw error;
     }

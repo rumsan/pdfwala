@@ -12,9 +12,9 @@ export function createPdf(
 ): Promise<Buffer | string> {
   data.assetPath = data.assetPath || template.path;
 
- 
+  
   const docDefinition = replacePlaceholders(template, data);
-  console.log(docDefinition,'docdefiniton')
+ 
 
   const pdfDoc = printer.createPdfKitDocument(docDefinition);
 

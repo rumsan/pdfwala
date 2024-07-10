@@ -19,33 +19,29 @@ export class PdfController {
   constructor(private readonly pdfService: PdfService) {}
 
   @Post()
-  async create(@Body() createPdfDto:CreatePdfDto,  @Res() res: Response,
-  @Req() req: Request, ) {
-  
-  const result = await  this.pdfService.create(createPdfDto);
-  if (typeof result === 'string') {
-    const userAgent =  req.headers['user-agent']?.toLowerCase()
-    if (userAgent && userAgent.includes('postman')) {
-      // For Postman requests, send the PDF as a download
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader(
-        'Content-Disposition',
-        'attachment; filename=consent.pdf',
-      );
-      res.send(Buffer.from(result, 'base64'));
-    } 
-    
-   
-   
-  } else if (result === true) {
-    
-    return { message: 'Email sent successfully' };
-  } else {
-    
-    return { message: 'Failed to send email' };
+  async create(
+    @Body() createPdfDto: CreatePdfDto,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    const result = await this.pdfService.create(createPdfDto);
+    if (typeof result === 'string') {
+      const userAgent = req.headers['user-agent']?.toLowerCase();
+      if (userAgent && userAgent.includes('postman')) {
+        // For Postman requests, send the PDF as a download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=consent.pdf',
+        );
+        res.send(Buffer.from(result, 'base64'));
+      } else {
+        // For other clients (browser, mobile apps), send the PDF as base64
+        res.send({ result });
+      }
+    }
+    return result;
   }
-}
-
 
   @Get()
   findAll() {

@@ -20,6 +20,7 @@ export function getTemplateJson(
   );
  
   let templatePath = path.join(templateRootPath, templateName);
+  
 
   if (data) {
     templatePath = path.join(templatePath, data);

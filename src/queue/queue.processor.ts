@@ -43,25 +43,20 @@ export class QueueProcessor {
     );
     const { templateName, data } = job.data;
 
-    const result = await  this.createPdfAndEmail(templateName, data);
-   
-    return result
+    const result = await this.createPdfAndEmail(templateName, data);
+
+    return result;
   }
 
   async createPdfAndEmail(templateName: string, data: TemplateData) {
-   
-
     if (templateName === 'consent') {
-    
       const organizationName = data.organization;
-     
 
-      const template = getTemplateJson(templateName,organizationName);
-      
-       const pdf = await createPdf(template, data);
-      
-       return pdf as string
-      
+      const template = getTemplateJson(templateName, organizationName);
+
+      const pdf = await createPdf(template, data);
+
+      return pdf as string;
     }
     const template = getTemplateJson(templateName);
 

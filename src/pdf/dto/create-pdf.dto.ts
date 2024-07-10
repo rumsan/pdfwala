@@ -58,6 +58,10 @@ export class CertificateDto {
   @IsString()
   email: string;
 
+  @IsNotEmpty()
+  @IsString()
+  organization: string;
+
   @IsOptional()
   @IsString()
   organizerName?: string;
