@@ -4,12 +4,12 @@ import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_DEFAULT, SEND_EMAIL } from '../constants';
 import { jobOptions } from './config/bullOptions';
-import { CreatePdfDto } from './dto/create-pdf.dto';
+import { ConsentDto, CreatePdfDto } from './dto/create-pdf.dto';
 import { CertificateDto } from './dto/create-pdf.dto';
 import { DonorCardDto } from './dto/create-pdf.dto';
 import * as moment from 'moment';
 import { calculateAge } from 'src/utils/helperFuntion';
-import { eventNames } from 'process';
+import { organizerConfig } from './organizer-config';
 
 @Injectable()
 export class PdfService {
@@ -41,6 +41,8 @@ export class PdfService {
     } else if (dto.templateName === 'hlb-certificate') {
       const certificateData = dto.data as CertificateDto;
 
+      const organizerUrl = organizerConfig[certificateData?.organizerName];
+
       const formatDate = moment(certificateData.eventDate).format(
         'MMMM Do, YYYY',
       );
@@ -53,31 +55,47 @@ export class PdfService {
           email: certificateData.email,
           organizerName: certificateData.organizerName,
           eventDate: formatDate,
+          organizerLogo: organizerUrl.url,
+        },
+      };
+    } else if (dto.templateName === 'consent') {
+      const consentData = dto.data as ConsentDto;
+      const firstName = consentData.name.split(' ')[0];
+      const lastName = consentData.name.split(' ').slice(1).join(' ');
+
+      jobData = {
+        templateName: dto.templateName,
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          email: consentData.email || '',
+          location: consentData.location,
+          dob: moment(consentData.dob).format('MMMM Do, YYYY'),
+          phone: consentData.phone,
+          organization: consentData.orgName,
+          lastDonated: consentData.lastDonated,
         },
       };
     } else {
       throw new Error('Invalid template name');
     }
     try {
-      await this._queue.add(
+      const job = await this._queue.add(
         SEND_EMAIL,
         jobData,
-        // {
-        //   templateName: dto.templateName,
-        //   data: {
-        //     fullName: dto.fullName,
-        //     eventLocation: dto.eventLocation,
-        //     email: dto.email,
-        //     organizerName: dto.organizerName,
-        //     eventDate: eventDate,
-        //   },
-        // },
+
         jobOptions,
       );
+      const result = await job.finished();
+      
+      if (typeof result === 'string') {
+        return result; // Return base64 string
+      }
+      return 'success'
+     
     } catch (error) {
       throw error;
     }
-    return 'success';
   }
 
   findAll() {

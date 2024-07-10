@@ -67,6 +67,40 @@ export class CertificateDto {
   eventDate: string;
 }
 
+export class ConsentDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  location: string;
+
+  @IsString()
+  dob: string;
+
+  @IsOptional()
+  @IsString()
+  email?: string;
+
+  @IsString()
+  phone: string;
+
+  @IsOptional()
+  @IsString()
+  bloodGroup?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  gender: string;
+
+  @IsNotEmpty()
+  @IsString()
+  orgName: string;
+
+  @IsOptional()
+  @IsString()
+  lastDonated?: string;
+}
+
 export class CreatePdfDto {
   @IsNotEmpty()
   @IsString()
@@ -78,9 +112,11 @@ export class CreatePdfDto {
       return DonorCardDto;
     } else if (object.object.templateName === 'hlb-certificate') {
       return CertificateDto;
+    } else if (object.object.templateName === 'consent') {
+      return ConsentDto;
     } else {
       return Object;
     }
   })
-  data: DonorCardDto | CertificateDto;
+  data: DonorCardDto | CertificateDto | ConsentDto;
 }

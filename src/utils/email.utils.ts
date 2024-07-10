@@ -45,7 +45,6 @@ export async function createEmail(
   payload.attachments = [];
   if (template.email?.images)
     for (const img of template.email.images) {
-      
       payload.attachments.push({
         filename: img.file,
         path: path.join(commonPathOfLogo, img.file),

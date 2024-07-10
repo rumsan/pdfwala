@@ -43,15 +43,34 @@ export class QueueProcessor {
     );
     const { templateName, data } = job.data;
 
-    return this.createPdfAndEmail(templateName, data);
+    const result = await  this.createPdfAndEmail(templateName, data);
+   
+    return result
   }
 
   async createPdfAndEmail(templateName: string, data: TemplateData) {
+   
+
+    if (templateName === 'consent') {
+    
+      const organizationName = data.organization;
+     
+
+      const template = getTemplateJson(templateName,organizationName);
+      
+       const pdf = await createPdf(template, data);
+      
+       return pdf as string
+      
+    }
     const template = getTemplateJson(templateName);
 
     const pdf = await createPdf(template, data);
 
     if (template.email) {
+      if (typeof pdf === 'string') {
+        throw new Error('Expected a Buffer but received a base64 string');
+      }
       const emailPayload = await createEmail(template, data, pdf);
 
       const res = await this._mailerService.sendMail(emailPayload);
@@ -59,6 +78,6 @@ export class QueueProcessor {
       return true;
     }
 
-    return false;
+    // return false;
   }
 }

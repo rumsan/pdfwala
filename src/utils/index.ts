@@ -10,22 +10,27 @@ export type TemplateJson = {
 
 export function getTemplateJson(
   templateName: string,
-  rootPath?: string,
+  //rootPath?: string,
+  data?: string,
 ): TemplateJson {
-  const templateRootPath =
-    rootPath ||
-    path.join(
-      process.cwd(),
-      '.data', // Change this to the correct path
-      'templates',
-    );
-  const templatePath = path.join(templateRootPath, templateName);
+  let templateRootPath = path.join(
+    process.cwd(),
+    '.data', // Change this to the correct path
+    'templates',
+  );
+ 
+  let templatePath = path.join(templateRootPath, templateName);
+
+  if (data) {
+    templatePath = path.join(templatePath, data);
+  }
+ 
   const templateFile = path.join(templatePath, 'template.json');
 
   const jsonData: TemplateJson = JSON.parse(
     fs.readFileSync(templateFile, 'utf8'),
   );
-  
+
   jsonData.name = templateName;
   jsonData.path = templatePath;
   return jsonData;
@@ -166,6 +171,7 @@ export function replacePlaceholders(templateJson: any, data: any): any {
     JSON.stringify(templateJson.pdf).replace(/{{(.*?)}}/g, (match, p1) => {
       const keys = p1.split('.');
       let value = data;
+
       for (const key of keys) {
         if (value.hasOwnProperty(key)) {
           value = value[key];
