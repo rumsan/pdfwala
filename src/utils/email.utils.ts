@@ -10,6 +10,7 @@ export async function renderTemplate(
 ): Promise<string> {
   try {
     const templateFile = await fs.promises.readFile(templatePath, 'utf-8');
+
     const template = Handlebars.compile(templateFile);
     const result = template(data);
 
@@ -26,13 +27,19 @@ export async function createEmail(
   pdfBuffer: Buffer,
 ) {
   const payload: ISendMailOptions = {
-    to: data.to,
-    from: `${data.fromName || template.email.fromName}<${template.email.from}>`,
+    to: data.email,
+    from: `${data.fromName || template.email.fromName}<${template.email.fromName}>`,
     subject: data.subject || template.email.subject,
   };
   payload.html = await renderTemplate(
     path.join(template.path, template.email.tplBody),
     data,
+  );
+  const commonPathOfLogo = path.join(
+    process.cwd(),
+    '.data',
+    'templates',
+    'common',
   );
 
   payload.attachments = [];
@@ -40,7 +47,7 @@ export async function createEmail(
     for (const img of template.email.images) {
       payload.attachments.push({
         filename: img.file,
-        path: path.join(template.path, img.file),
+        path: path.join(commonPathOfLogo, img.file),
         cid: img.cid,
         headers: {
           'Content-Disposition': `inline; filename="${img.file}`,
@@ -50,7 +57,7 @@ export async function createEmail(
 
   if (pdfBuffer) {
     payload.attachments.push({
-      filename: `${template}.pdf`,
+      filename: `${template.name}.pdf`,
       content: pdfBuffer,
       contentType: 'application/pdf',
     });

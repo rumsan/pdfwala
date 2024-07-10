@@ -34,8 +34,8 @@ async function bootstrap() {
   const port = process.env.PORT || 3333;
 
   const config = new DocumentBuilder()
-    .setTitle('Rahat Core')
-    .setDescription('API service for Rahat Core')
+    .setTitle('HLB PDF Server')
+    .setDescription('Pdf service for HLB')
     .setVersion('1.0')
     .build();
 
