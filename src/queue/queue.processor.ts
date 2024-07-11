@@ -1,19 +1,22 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable,Logger} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { getTemplateJson } from '../utils';
 import { createPdf } from '../utils/pdf.utils';
 import { createEmail } from '../utils/email.utils';
-import { OnQueueActive, OnQueueCompleted, Process, Processor } from '@nestjs/bull';
+import {
+  OnQueueActive,
+  OnQueueCompleted,
+  Process,
+  Processor,
+} from '@nestjs/bull';
 import { QUEUE_DEFAULT, SEND_EMAIL } from '../constants';
 import { Job } from 'bull';
-
 
 @Injectable()
 @Processor(QUEUE_DEFAULT)
 export class QueueProcessor {
   private readonly _logger = new Logger(QueueProcessor.name);
   constructor(private readonly _mailerService: MailerService) {}
-
 
   @OnQueueActive()
   onActive(job: Job) {
@@ -36,22 +39,17 @@ export class QueueProcessor {
 
   async createPdfAndEmail(templateName: string, data: any) {
     const template = getTemplateJson(templateName);
-    console.log(template,'template')
-    
+
     const pdf = await createPdf(template, data);
-    console.log(pdf,'pdf')
-  
 
     if (template.email) {
-     
+      const emailPayload = await createEmail(template, data, pdf);
 
-      // const emailPayload = await createEmail(template, data, pdf);
-    
-      // const res = await this._mailerService.sendMail(emailPayload);
-     // console.log(res);
+      const res = await this._mailerService.sendMail(emailPayload);
+
       return true;
     }
 
-     return false;
+    return false;
   }
 }
