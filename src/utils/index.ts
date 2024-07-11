@@ -20,6 +20,7 @@ export function getTemplateJson(
       'templates',
     );
   const templatePath = path.join(templateRootPath, templateName);
+  
   const templateFile = path.join(templatePath, 'template.json');
 
   const jsonData: TemplateJson = JSON.parse(
