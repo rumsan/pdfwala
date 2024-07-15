@@ -5,13 +5,13 @@ import * as path from 'path';
 
 const templateName = 'hlb-certificate';
 const data = {
-  fullName: 'John Doe',
+  fullName: 'Pratiksha Rai',
 };
 
 async function testPdfDesign() {
   const template = getTemplateJson(templateName);
   const pdf = await createPdf(template, data);
-  fs.writeFileSync(path.join(process.cwd(), '.data', 'document.pdf'), pdf);
+  //fs.writeFileSync(path.join(process.cwd(), '.data', 'document.pdf'), pdf);
 }
 
 testPdfDesign();
