@@ -16,8 +16,8 @@ import { QueueProcessor } from './queue.processor';
           port: +configService.get('SMTP_PORT'),
           secure: false,
           auth: {
-            user: configService.get('EMAIL'),
-            pass: configService.get('PASSWORD'),
+            user: configService.get('SMTP_USER'),
+            pass: configService.get('SMTP_PASSWORD'),
           },
         },
         defaults: { from: '"No Reply" <no-reply@rumsan.com>' },
